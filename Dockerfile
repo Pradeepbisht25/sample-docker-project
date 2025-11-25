@@ -2,27 +2,48 @@
 
 ARG NODE_VERSION=20
 
-FROM node:${NODE_VERSION}-alpine
-
-# Use production environment
-ENV NODE_ENV=production
+############################################
+# 1️⃣ TEST STAGE  → target: test
+############################################
+FROM node:${NODE_VERSION}-alpine AS test
 
 WORKDIR /usr/src/app
 
-# Copy package files first for better caching
+# Copy package files
 COPY package*.json ./
 
-# Install only production deps - RUN npm ci --omit=dev
-RUN npm ci --omit=dev
+# Install ALL dependencies (including devDependencies for tests)
+RUN npm install
 
-# Copy all source files
+# Copy rest of code
 COPY . .
 
-# Run app as non-root
+# Run tests (if you have tests)
+# If no tests, keep a dummy command:
+RUN echo "Running test stage..."
+
+############################################
+# 2️⃣ PRODUCTION STAGE  → target: prod
+############################################
+FROM node:${NODE_VERSION}-alpine AS prod
+
+ENV NODE_ENV=production
+WORKDIR /usr/src/app
+
+# Copy package files
+COPY package*.json ./
+
+# Install ONLY production dependencies
+RUN npm ci --omit=dev
+
+# Copy code
+COPY . .
+
+
 USER node
 
-# App port
+
 EXPOSE 3003
 
-# Start the app
+
 CMD ["node", "src/index.js"]
