@@ -29,4 +29,4 @@ const gracefulShutdown = () => {
 
 process.on('SIGINT', gracefulShutdown);
 process.on('SIGTERM', gracefulShutdown);
-process.on('SIGUSR2', gracefulShutdown); // Sent by nodemon and check
+process.on('SIGUSR2', gracefulShutdown); // Sent by nodemon and check and check loginpush
