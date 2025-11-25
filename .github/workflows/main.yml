@@ -29,6 +29,6 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
           push: true
-          target: prod
+          target: main
          # tags: ${{ vars.pradeepbisht25 }}/${{ github.event.repository.name }}:latest
           tags: ${{ vars.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
